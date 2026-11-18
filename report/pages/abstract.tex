@@ -1,19 +1,20 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                         ABSTRACT
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{center}
-    {\LARGE \textbf{\textcolor{skitnavy}{ABSTRACT}}}
+{\HeadingFont ABSTRACT}
 \end{center}
-\vspace{1cm}
 
-Preparing for technical software engineering interviews in the modern era presents significant challenges for students and aspiring developers. Traditional study methods are often fragmented across disparate platforms, suffer from outdated static content, lack structured model explanations, and provide zero administrative visibility into candidate learning deficits. 
+\vspace{1.0cm}
 
-This project presents \textbf{OmniFAQ AI}, an intelligent, full-stack tech interview preparation web platform that unifies high-quality curated technical interview repositories with real-time generative capabilities powered by \textbf{Google Gemini Generative Artificial Intelligence}. Developed using a three-tier client-server architecture, the system incorporates an ultra-responsive, single-page application (SPA) frontend designed with modern glassmorphism aesthetics, backed by a modular \textbf{PHP 8.2 REST API} router and a high-performance relational database engine.
+\begin{spacing}{1.4}
+\justifying
+\noindent
+Preparing for technical interviews in the modern software engineering landscape presents significant challenges for aspiring developers. Traditional study repositories are frequently fragmented, static, and lack structured model explanations, leaving candidates unprepared for modern architectural and framework-specific evaluations. To address these limitations, this project presents the development of \textbf{OmniFAQ AI}, an intelligent, web-based technical interview preparation platform designed to streamline and personalize interview readiness.
 
-A pivotal innovation of the platform is its \textbf{dual-driver database persistence architecture}, which dynamically binds to cloud-hosted MySQL/MariaDB instances when reachable, while offering automatic, zero-configuration failover to an embedded SQLite engine equipped with self-seeding mechanisms. Furthermore, the platform introduces an \textbf{automated self-learning loop}: when candidates query emerging or un-indexed technical topics, the backend triggers Google Gemini Generative API under strict JSON schema constraints. The synthesized questions, comprehensive model answers, taxonomic categories, and difficulty tiers are simultaneously delivered to the user and persisted into the database, transforming transient AI inferences into permanent knowledge assets without redundant API overhead.
+\vspace{0.4cm}
+\noindent
+The proposed system combines a curated technical repository across five key disciplines (JavaScript, React, Node.js, SQL, and System Design) with real-time generative capabilities powered by Google Gemini Generative AI. The frontend interface is developed using HTML5, CSS3 with glassmorphic aesthetics, and vanilla JavaScript/jQuery, providing a highly responsive Single Page Application (SPA) experience across devices. The backend is implemented in PHP 8, which securely handles asynchronous RESTful API requests, performs weighted relevance search scoring, and interfaces with a dual-driver relational database architecture (MySQL and embedded SQLite) to persist questions and search telemetry in real-time.
 
-In addition, the system incorporates a client-side practice evaluation engine measuring conceptual keyword coverage, role-based access control secured by Bcrypt cryptographic hashing, and a comprehensive administrative telemetry dashboard tracking search volume, query resolution percentage, and unresolved student inquiries. The platform has been containerized using \textbf{Docker} and successfully deployed on the \textbf{Render} cloud platform, demonstrating high reliability, sub-second latency, and horizontal scalability.
+\vspace{0.4cm}
+\noindent
+By adopting a decoupled client-server architecture, the system guarantees scalable data flow, high maintainability, and zero-configuration failover. Key functionalities include debounced live keyword search, dynamic on-demand AI question synthesis with automatic database ingestion, active recall answer practice with concept coverage evaluation, and an administrative analytics panel for tracking learning gaps. The successful containerization and deployment of this project using Docker on cloud infrastructure demonstrates the power of integrating modern web technologies with Generative AI to solve real-world career preparation challenges.
 
-\vspace{1cm}
-\textbf{Keywords:} Technical Interview Preparation, Generative AI, Google Gemini API, PHP 8 REST API, Dual-Driver Database Architecture, SQLite/MySQL, Glassmorphism UI, Docker Containerization, EdTech.
+\end{spacing}

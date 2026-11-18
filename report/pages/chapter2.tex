@@ -1,69 +1,80 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%         CHAPTER 2: LITERATURE SURVEY & TECH STACK
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Tools and Technology Used}
 
-\chapter{Literature Survey and Technology Stack}
-\label{chap:lit_tech}
+\section{Software Technologies}
+OmniFAQ AI is built using a modern, decoupled web technology stack that delivers exceptional responsiveness, high security, and minimal external dependency overhead.
 
-\section{Literature Survey of Existing Platforms}
-A thorough comparative analysis of prevailing technical interview and developer learning platforms reveals distinct architectural paradigms and trade-offs.
+\subsection{Frontend}
+\begin{itemize}
+    \item \textbf{HTML5:} Structures the Single Page Application, defining semantic containers, authentication drawers, search interfaces, and question card grids.
+    \item \textbf{CSS3 (Glassmorphism):} Provides a sleek, dark-slate teal design system (\texttt{\#112F3B}) with vibrant cyan accents (\texttt{\#0891B2}, \texttt{\#06B6D4}), backdrop blur filters, custom scrollbars, and responsive layouts. The entire core stylesheet is inlined to ensure zero render-blocking layout shift.
+    \item \textbf{JavaScript / jQuery 3.7.1:} Orchestrates client-side view routing, search input debouncing, asynchronous REST API communication via AJAX, accordion-style answer reveals, and active recall practice scoring.
+    \item \textbf{Lucide Icons:} Supplies lightweight, high-contrast SVG vector icons across navigation headers, difficulty badges, and input controls.
+\end{itemize}
 
-\subsection{Analysis of Existing Solutions}
+\subsection{Backend}
+\begin{itemize}
+    \item \textbf{PHP 8.2:} Functions as the core server-side runtime, providing a centralized RESTful router (\texttt{api.php}) with CORS support, JSON serialization, and role-based access validation.
+    \item \textbf{Dual-Driver Database Engine (MySQL \& SQLite):} Connects to cloud MySQL/MariaDB instances when environment variables are supplied, with automatic zero-configuration failover to an embedded SQLite database (\texttt{database.sqlite}).
+    \item \textbf{Google Gemini API (\texttt{gemini-2.5-flash}):} Delivers advanced generative intelligence for synthesizing novel technical interview questions under strict JSON schema constraints.
+    \item \textbf{Docker \& Apache 2.4:} Encapsulates the application into a portable, production-ready container deployed seamlessly on cloud PaaS platforms like Render.
+\end{itemize}
+
+\section{System Architecture}
+The system follows a three-tier client-server architecture:
 \begin{enumerate}
-    \item \textbf{LeetCode / HackerRank:} These platforms excel in algorithmic puzzle solving and automated test execution across various programming languages. However, they place virtually no emphasis on high-level system design trade-offs, language runtime internals (e.g., JavaScript event loop, microtask queues), architectural design patterns, or structured verbal explanation techniques.
-    \item \textbf{GeeksforGeeks / InterviewBit:} These portals feature extensive catalogs of interview questions. Nonetheless, they operate on static content repositories maintained by manual editorial teams. They cannot dynamically generate new, high-quality interview scenarios for emerging open-source technologies or custom candidate queries.
-    \item \textbf{General AI Chatbots (ChatGPT / Claude):} While general-purpose LLMs can answer any programming question, they provide an uncurated, free-form experience lacking structured difficulty grading, persistent taxonomy, progress tracking, and administrative analytics tailored for learning cohorts.
+    \item \textbf{Presentation Tier:} The browser client handles user interactions, manages session tokens in \texttt{localStorage}, and emits asynchronous HTTP requests.
+    \item \textbf{Application Tier:} The Apache web server and PHP router parse requests, execute authentication routines, perform weighted relevance ranking, and handle outbound cURL requests to Google's API.
+    \item \textbf{Data Tier:} The relational database manages users, FAQs, and search telemetry, while the Gemini API serves as an external generative knowledge engine.
 \end{enumerate}
 
-\begin{table}[h!]
-\centering
-\caption{Comparative Matrix of Technical Interview Platforms}
-\label{tab:comparison}
-\begin{tabularx}{\textwidth}{lcccc}
-\toprule
-\textbf{Evaluation Criteria} & \textbf{LeetCode} & \textbf{GeeksforGeeks} & \textbf{Raw AI Chat} & \textbf{OmniFAQ AI} \\
-\midrule
-Curated Tech Domains & Algorithms Only & Yes & No & \textbf{Yes (5 Domains)} \\
-Structured Model Answers & Minimal & Partial & Variable & \textbf{Comprehensive} \\
-On-Demand Topic Generation & No & No & Yes & \textbf{Yes (Gemini AI)} \\
-Self-Learning Persistence & No & No & No & \textbf{Yes (Auto-Save DB)} \\
-Keyword Answer Practice & No & No & No & \textbf{Yes (Interactive)} \\
-Unresolved Search Analytics & No & No & No & \textbf{Yes (Admin Panel)} \\
-Zero-Config Dual DB Support & No & N/A & N/A & \textbf{Yes (MySQL/SQLite)} \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\section{Software Model Used}
+The project was developed following the \textbf{Iterative Development Model}. An initial prototype supported basic question querying and local SQLite storage. Subsequent iterations incrementally integrated real-time search debouncing, Google Gemini API synthesis, automated database persistence, active recall practice evaluation, and cloud Docker containerization.
 
-\section{Frontend Technology Stack}
-The presentation tier of OmniFAQ AI is engineered as an ultra-responsive Single Page Application (SPA) designed to run seamlessly across desktops, tablets, and mobile devices without heavy client-side bundlers.
+\section{Database Design}
+The relational schema comprises three primary tables: \texttt{users}, \texttt{faqs}, and \texttt{search\_analytics}.
 
-\subsection{HTML5 and CSS3 Custom Glassmorphism}
-The user interface leverages modern CSS3 properties, including CSS Custom Properties (variables), Flexbox, CSS Grid, and \texttt{backdrop-filter: blur(20px)} for high-contrast glassmorphic aesthetics. A carefully selected dark-slate teal color scheme (\#112F3B) with glowing cyan accents (\#0891B2, \#06B6D4) provides visual comfort during extended study sessions. Crucially, the entire core stylesheet is inlined into the primary markup, eliminating render-blocking network waterfalls and preventing unstyled layout shifts (FOUC).
+\subsection{Important Fields}
+\begin{itemize}
+    \item \textbf{\texttt{users} Table:}
+    \begin{itemize}
+        \item \texttt{id}: Primary Key, Auto-increment.
+        \item \texttt{full\_name}: String, candidate display name.
+        \item \texttt{email}: String, Unique identifier used for login.
+        \item \texttt{password}: String, Bcrypt salted hash.
+        \item \texttt{role}: String (\texttt{user} or \texttt{admin}).
+    \end{itemize}
+    \item \textbf{\texttt{faqs} Table:}
+    \begin{itemize}
+        \item \texttt{id}: Primary Key, Auto-increment.
+        \item \texttt{question}: Text, the technical interview question.
+        \item \texttt{answer}: Text, comprehensive model answer.
+        \item \texttt{category}: String (JavaScript, React, Node.js, SQL, System Design).
+        \item \texttt{difficulty}: String (Easy, Medium, Hard).
+        \item \texttt{tags}: String, comma-separated keywords for relevance matching.
+        \item \texttt{views}: Integer, tracks question popularity.
+    \end{itemize}
+    \item \textbf{\texttt{search\_analytics} Table:}
+    \begin{itemize}
+        \item \texttt{id}: Primary Key, Auto-increment.
+        \item \texttt{query\_text}: String, search query entered by the user.
+        \item \texttt{matched\_results\_count}: Integer, count of matching FAQs returned.
+        \item \texttt{is\_unresolved}: Integer (1 if 0 matches found; 0 otherwise).
+        \item \texttt{searched\_at}: Timestamp of search execution.
+    \end{itemize}
+\end{itemize}
 
-\subsection{jQuery 3.7.1 and DOM Event Architecture}
-jQuery is employed to handle client-side view routing (\texttt{switchView}), form serialization, debounced asynchronous HTTP queries, accordion-style answer reveals, and dynamic DOM injection of question cards without necessitating bulky virtual DOM frameworks.
+\section{Product User Interfaces}
+The primary interface is a search-first Single Page Application consisting of:
+\begin{itemize}
+    \item A prominent debounced search bar with one-click suggestion tags (JavaScript, React, Node.js, SQL, System Design).
+    \item An interactive question card grid displaying domain badges, difficulty tiers, view counts, and collapsible model answers.
+    \item An active recall practice text area with automated keyword coverage scoring.
+    \item A secured administrative analytics modal displaying platform KPIs and top unresolved student queries.
+\end{itemize}
 
-\subsection{Lucide Modern Vector Icons}
-Lucide Icons are utilized across the navigational headers, difficulty badges, input adornments, and action buttons, providing crisp SVG visuals with near-zero runtime footprint.
-
-\section{Backend Architecture: PHP 8.2 REST API}
-The business logic tier is powered by PHP 8.2, chosen for its mature ecosystem, high execution speed, robust native standard library, and exceptional deployment portability.
-
-\subsection{RESTful Router Pattern}
-Rather than scattering logic across numerous detached script files, backend communication is channeled through a centralized API controller (\texttt{api.php}). The router parses incoming HTTP requests (both URL query parameters and raw JSON payloads via \texttt{php://input}), enforces CORS headers, validates user roles, dispatches execution to designated handler functions, and emits standardized JSON responses.
-
-\subsection{Database Abstraction with PDO}
-All database interactions are conducted via the PHP Data Objects (PDO) extension utilizing a thread-safe Singleton connection handler. Prepared statements with explicit parameter binding are utilized exclusively, eliminating SQL injection attack vectors.
-
-\section{Database Architecture: Dual-Driver Engine}
-A distinguishing architectural achievement of OmniFAQ AI is its resilient dual-driver database abstraction implemented in \texttt{db.php}:
-\begin{enumerate}
-    \item \textbf{MySQL / MariaDB Cloud Engine:} If environment variables (\texttt{DB\_HOST}, \texttt{DB\_USER}, etc.) are detected, the backend connects to an enterprise MySQL instance utilizing InnoDB storage engines and UTF-8 mb4 encoding for full-text search indexing.
-    \item \textbf{Zero-Config SQLite Embedded Engine:} If no remote database is configured (or if MySQL connectivity times out), the system gracefully falls back to an embedded SQLite3 database (\texttt{database.sqlite}). On its initial launch, the system automatically executes schema definitions and seeds eighteen expert technical interview questions and default administrator accounts.
-\end{enumerate}
-
-\section{Artificial Intelligence Integration: Google Gemini API}
-For on-demand question synthesis, OmniFAQ AI interfaces with the \textbf{Google Gemini API} (\texttt{gemini-2.5-flash}). Gemini was selected for its high processing speed, state-of-the-art technical reasoning, and support for native structured JSON outputs (\texttt{responseMimeType: "application/json"}). Requests are transmitted via backend cURL routines, shielding the client browser from exposing API keys.
-
-\section{Containerization and Cloud Deployment}
-The application is fully containerized using an official \texttt{php:8.2-apache} base image. A dynamically evaluated entrypoint command substitutes Apache's listening port at container startup (\texttt{sed -i 's/Listen [0-9]*/Listen \$\{PORT:-80\}/'}), making the container compliant with cloud environments such as \textbf{Render} and \textbf{Railway} that allocate arbitrary port numbers dynamically.
+\section{Design and Implementation Constraints}
+\begin{itemize}
+    \item \textbf{Dual Database Portability:} The system must run flawlessly in both zero-config local classrooms (using SQLite) and scalable cloud clusters (using MySQL) without altering business logic code.
+    \item \textbf{API Key Security:} Google Gemini API keys must never be exposed to the client-side JavaScript bundle; all AI transactions are securely handled server-side through PHP cURL routines and environment variables.
+    \item \textbf{Dynamic Port Allocation:} The Docker container must dynamically adapt its Apache listening port at runtime to comply with cloud PaaS hosting environments.
+\end{itemize}

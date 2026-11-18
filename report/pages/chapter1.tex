@@ -1,54 +1,61 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                    CHAPTER 1: INTRODUCTION
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \chapter{Introduction}
-\label{chap:intro}
 
-\section{Project Overview}
-In today's highly competitive software development industry, technical recruitment processes evaluate candidates across diverse domains including core language mechanics, modern frontend libraries, backend distributed systems, relational databases, and enterprise architectural design. Engineering students and job seekers routinely face multi-stage technical interviews requiring rigorous theoretical understanding, rapid problem-solving skills, and the ability to articulate structured, in-depth architectural solutions.
-
-\textbf{OmniFAQ AI} is a comprehensive, modern web-based technical interview training platform engineered to streamline and elevate candidate preparation. Built upon a decoupled client-server architecture, the platform bridges the gap between static study material and dynamic, real-world candidate needs by pairing a rich, pre-loaded repository of domain-specific interview questions with the real-time synthesis power of \textbf{Google Gemini Generative AI}. The application enables learners to search, filter by adaptive difficulty levels (Easy, Medium, Hard), practice conceptual answers with automated keyword feedback, and dynamically expand the platform's repository on-demand.
-
-\section{Motivation and Background}
-With the rapid evolution of modern web frameworks, cloud technologies, and developer tooling, software engineering curricula frequently lag behind current industry interview expectations. Candidates typically spend hundreds of hours navigating dozens of disconnected resources, including competitive coding repositories, community forums, medium articles, and fragmented documentation. 
-
-Furthermore, existing question-and-answer repositories are inherently static: if a student is interviewing for a niche framework (e.g., GraphQL, Docker, Kubernetes, WebSockets) that has not been explicitly cataloged by the site administrator, the user receives zero guidance. Recent advancements in Large Language Models (LLMs), particularly Google's Gemini family of generative models, present a transformative opportunity to convert static educational portals into self-learning, adaptive environments capable of generating domain-accurate interview questions and gold-standard model answers on the fly.
+\section{Project Description}
+The \textbf{OmniFAQ AI} platform is an intelligent web-based software application engineered to modernize and elevate technical interview preparation. It replaces fragmented study materials and static question banks with a dynamic, AI-augmented interview training environment. By pairing a curated repository of core technical questions with the real-time reasoning power of \textbf{Google Gemini Generative AI}, the system allows candidates to search concepts, practice formulations, receive instant keyword-level feedback, and trigger the creation of new interview questions on uncataloged technologies that are permanently saved to the database.
 
 \section{Problem Statement}
-Contemporary technical interview preparation suffers from four foundational bottlenecks:
-\begin{enumerate}
-    \item \textbf{Fragmentation of Learning Resources:} Candidates are forced to bounce between competitive programming websites, blogs, and community forums without a unified repository covering theory, architectural questions, and code semantics.
-    \item \textbf{Lack of Comprehensive Model Explanations:} Many portals supply interview questions without high-scoring, structured technical answers that demonstrate depth of understanding.
-    \item \textbf{Static, Non-Adaptive Repositories:} Conventional FAQ systems cannot adapt dynamically when learners query emerging, modern, or specialized developer topics.
-    \item \textbf{Zero Telemetry on Student Knowledge Gaps:} Educators and platform administrators lack empirical data regarding which topics students search for most frequently and where learners encounter unresolved queries.
-\end{enumerate}
-
-\section{Objectives of the System}
-The primary objectives of the OmniFAQ AI project are as follows:
+In current academic and career preparation settings, technical interview candidates rely heavily on static documentation, disparate coding forums, and uncurated blogs. This approach leads to several problems:
 \begin{itemize}
-    \item \textbf{Unified Multi-Domain Question Bank:} To engineer a curated repository covering five core technical disciplines: JavaScript, React, Node.js, SQL, and System Design.
-    \item \textbf{On-Demand Generative AI Expansion:} To integrate the Google Gemini API to dynamically generate 3--4 rigorous interview questions with model answers whenever an unresolved topic is searched.
-    \item \textbf{Self-Learning Database Persistence:} To implement an automated ingestion pipeline where AI-generated questions are sanitized and permanently written into the database, benefiting all future platform visitors without recurring API costs.
-    \item \textbf{Debounced Real-Time Search Engine:} To create a fast, client-side debounced search interface with weighted relevance scoring across question titles, keyword tags, and model answers.
-    \item \textbf{Interactive Candidate Practice Engine:} To supply an active recall practice module that analyzes a user's typed response against expected technical keywords and provides real-time coverage scores.
-    \item \textbf{Administrative Analytics and Gap Detection:} To build an administrative telemetry dashboard that logs all user searches, computes resolution rates, and surfaces high-priority unresolved queries for curriculum refinement.
-    \item \textbf{Robust Dual-Driver Database Deployment:} To design an environment-agnostic backend supporting cloud MySQL as well as automatic, zero-configuration failover to an embedded SQLite engine.
+    \item Disconnected study resources requiring candidates to switch constantly between algorithms, language syntax, and system architecture portals.
+    \item Absence of comprehensive, high-scoring model answers explaining technical trade-offs.
+    \item Inability of static question banks to adapt when students search for emerging technologies or custom frameworks.
+    \item Total lack of telemetry for mentors to identify where learners get stuck with unresolved questions.
+\end{itemize}
+
+\section{Motivation}
+The primary motivation behind this project is to leverage modern web technologies (HTML5, CSS3, JavaScript, PHP 8, MySQL/SQLite) in synergy with state-of-the-art Generative Artificial Intelligence (Google Gemini API) to create an accessible, self-expanding, and low-latency interview preparation platform. The system eliminates manual content curation bottlenecks, enhances candidate interview confidence, and provides educators with actionable search telemetry.
+
+\section{Objectives}
+The key objectives of this project include:
+\begin{itemize}
+    \item To build a centralized, curated repository of technical interview questions across five core domains: JavaScript, React, Node.js, SQL, and System Design.
+    \item To integrate Google Gemini Generative AI for on-demand question synthesis with automatic database persistence.
+    \item To implement a real-time debounced search bar with weighted relevance scoring.
+    \item To provide an interactive practice module that assesses candidate responses against expected technical keywords.
+    \item To implement a dual-driver database connection supporting cloud MySQL with automatic zero-configuration SQLite fallback.
+    \item To establish an administrative telemetry dashboard tracking search volume, query resolution rates, and knowledge gaps.
 \end{itemize}
 
 \section{Project Scope}
-The scope of OmniFAQ AI encompasses full-stack software development, REST API design, cryptographic security, database normalization, prompt engineering, containerization, and cloud deployment:
+The scope of OmniFAQ AI encompasses full-stack web application development, client-side debouncing, REST API design, database schema normalization, prompt engineering, and cloud deployment. It addresses engineering undergraduates, job seekers, and academic faculties. Future scope encompasses speech-to-text mock audio interviews, real-time code execution sandboxes, and vector semantic similarity search.
+
+\section{Intended Users}
 \begin{itemize}
-    \item \textbf{Target Audience:} Computer Science undergraduate students, bootcamp graduates, junior-to-mid level software engineers, technical mentors, and academic institutions.
-    \item \textbf{Deployment Scope:} Containerized using Docker for zero-dependency deployment across cloud PaaS providers (e.g., Render, Railway) as well as traditional LAMP/XAMPP local environments.
-    \item \textbf{Security Boundaries:} Complete protection against SQL Injection via PDO parameterized queries, secure user authentication with Bcrypt password hashing, and role-based access control.
+    \item \textbf{Engineering Students \& Job Seekers:} Candidates seeking a structured, active-recall training environment to master technical interview rounds.
+    \item \textbf{Technical Mentors \& Administrators:} Instructors who monitor search analytics, identify unresolved queries, and curate technical curriculum content through administrative CRUD operations.
 \end{itemize}
 
-\section{Report Organization}
-The remainder of this report is organized as follows:
+\section{Key Features}
 \begin{itemize}
-    \item \textbf{Chapter 2 (Literature Survey and Technology Stack):} Reviews existing interview portals and details the core technologies comprising the frontend, backend, database, AI engine, and deployment infrastructure.
-    \item \textbf{Chapter 3 (System Design and Architecture):} Elucidates the three-tier system architecture, Entity-Relationship (ER) model, Data Flow Diagrams (DFDs), and RESTful API endpoint specifications.
-    \item \textbf{Chapter 4 (Implementation and Key Features):} Provides in-depth implementation mechanics of debounced search, generative AI integration, practice answer evaluation, and admin telemetry.
-    \item \textbf{Chapter 5 (Testing, Deployment, and Results):} Documents test cases, dual-database failover validation, Docker containerization, cloud deployment on Render, and concludes with future directions.
+    \item \textbf{Curated Multi-Domain Repository:} 18+ high-yield pre-loaded questions spanning 5 core technical subjects.
+    \item \textbf{Live AI Question Generator:} Generates 3--4 rigorous interview questions with model answers on any queried technology topic.
+    \item \textbf{Self-Learning Database Loop:} Dynamically created questions are automatically sanitized and persisted into the database for future visitors.
+    \item \textbf{Debounced Search Engine:} 400ms client debouncing with weighted relevance calculation across questions, tags, and answers.
+    \item \textbf{Active Recall Practice Module:} Assesses written answers against domain-specific keyword tokens with instant visual coverage feedback.
+    \item \textbf{Dual-Driver Database Architecture:} Auto-detects cloud MySQL with seamless failover to embedded SQLite.
+\end{itemize}
+
+\section{Advantages}
+\begin{itemize}
+    \item Eliminates the latency and fragmentation of jumping between multiple study websites.
+    \item Guarantees coverage of emerging technologies through on-demand AI generation.
+    \item Operates with high cost efficiency by caching AI inferences permanently into the database.
+    \item Features zero-configuration deployment capability via its embedded SQLite fallback engine.
+\end{itemize}
+
+\section{Limitations}
+\begin{itemize}
+    \item Requires an active internet connection to communicate with the Google Gemini API for novel topics.
+    \item Keyword-based practice evaluation focuses on conceptual term presence rather than deep grammatical or semantic parsing.
+    \item Third-party API rate limits may apply under sustained bursts of uncached AI generation.
 \end{itemize}

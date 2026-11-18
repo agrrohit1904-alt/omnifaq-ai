@@ -1,90 +1,162 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                 REPORT PREAMBLE CONFIGURATION
+%            SKIT INDUSTRIAL TRAINING REPORT
+%                  PREAMBLE FILE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage[top=1in, bottom=1in, left=1.25in, right=1in]{geometry}
+%=============================================================
+% PAGE LAYOUT
+%=============================================================
+\usepackage[
+a4paper,
+left=1in,
+right=1in,
+top=1in,
+bottom=1in
+]{geometry}
 
+%=============================================================
+% FONT (Dual Compatibility for pdfLaTeX, XeLaTeX & LuaLaTeX)
+%=============================================================
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{mathptmx}
+\else
+  \usepackage{fontspec}
+  \setmainfont{Times New Roman}
+\fi
+
+%=============================================================
+% LINE SPACING
+%=============================================================
+\usepackage{setspace}
+\onehalfspacing
+
+%=============================================================
+% GRAPHICS
+%=============================================================
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb}
-\usepackage{booktabs}
+\graphicspath{{images/}}
+
+%=============================================================
+% TABLES & CODE LISTINGS
+%=============================================================
 \usepackage{array}
-\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{longtable}
 \usepackage{multirow}
-\usepackage{caption}
-\usepackage{subcaption}
-\usepackage{titlesec}
-\usepackage{fancyhdr}
-\usepackage{microtype}
-\usepackage{cite}
-
-% Color definitions
-\usepackage{xcolor}
-\definecolor{skitnavy}{RGB}{10, 22, 40}
-\definecolor{skitteal}{RGB}{8, 145, 178}
-\definecolor{codegray}{RGB}{245, 247, 250}
-\definecolor{commentgreen}{RGB}{34, 139, 34}
-\definecolor{keywordblue}{RGB}{0, 51, 153}
-\definecolor{stringred}{RGB}{178, 34, 34}
-
-% Code Listing Configuration
 \usepackage{listings}
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{codegray},   
-    commentstyle=\color{commentgreen}\itshape,
-    keywordstyle=\color{keywordblue}\bfseries,
-    numberstyle=\tiny\color{gray},
-    stringstyle=\color{stringred},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=6pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2,
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
     frame=single,
-    rulecolor=\color{black!20}
-}
-\lstset{style=mystyle}
-
-% Hyperref Setup
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=skitnavy,
-    filecolor=magenta,      
-    urlcolor=skitteal,
-    citecolor=skitteal,
-    pdftitle={OmniFAQ AI Industrial Training Report},
-    pdfauthor={Khushi Dhakad},
-    pdfsubject={Tech Interview Preparation Platform with Generative AI}
+    showstringspaces=false,
+    tabsize=2,
+    backgroundcolor=\color{black!3}
 }
 
-% Header & Footer
+%=============================================================
+% MATH & COLORS
+%=============================================================
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+
+%=============================================================
+% HYPERLINKS
+%=============================================================
+\usepackage[
+colorlinks=true,
+linkcolor=blue,
+urlcolor=blue,
+citecolor=blue
+]{hyperref}
+
+%=============================================================
+% PARAGRAPH SETTINGS
+%=============================================================
+\usepackage{ragged2e}
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt}
+
+%=============================================================
+% CAPTIONS
+%=============================================================
+\usepackage{caption}
+\captionsetup{
+font=small,
+labelfont=bf
+}
+
+%=============================================================
+% AUTOMATIC PAGE BORDER (As per SKIT Guidelines)
+%=============================================================
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{eso-pic}
+
+\newcommand{\DrawBorder}{
+\begin{tikzpicture}[remember picture,overlay]
+\draw[line width=1pt]
+([xshift=1cm,yshift=-1cm]current page.north west)
+rectangle
+([xshift=-1cm,yshift=1cm]current page.south east);
+\end{tikzpicture}
+}
+
+\AddToShipoutPictureBG{
+\DrawBorder
+}
+
+%=============================================================
+% TABLE OF CONTENTS FORMATTING
+%=============================================================
+\usepackage{tocloft}
+\renewcommand{\contentsname}{Table of Contents}
+\renewcommand{\cfttoctitlefont}{\hfill\bfseries\Large}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftdotsep}{1}
+\setlength{\cftbeforechapskip}{6pt}
+\setlength{\cftbeforesecskip}{2pt}
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\bfseries}
+
+%=============================================================
+% HEADERS & FOOTERS
+%=============================================================
+\usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\slshape\nouppercase{\leftmark}}
-\fancyhead[R]{\thepage}
-\renewcommand{\headrulewidth}{0.4pt}
-\setlength{\headheight}{15pt}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 
-% Title formats
-\titleformat{\chapter}[display]
-  {\normalfont\bfseries\color{skitnavy}}
-  {\filleft\fontsize{50}{60}\selectfont\color{skitteal!50}\thechapter}
-  {1ex}
-  {\titlerule\vspace{1ex}\huge\filright}
-  [\vspace{1ex}\titlerule]
+%=============================================================
+% SECTION FORMATTING
+%=============================================================
+\usepackage{titlesec}
+\titleformat{\section}
+{\bfseries\fontsize{16}{18}\selectfont}
+{\thesection}
+{1em}
+{}
 
-\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
-\titlespacing*{\section}{0pt}{12pt}{6pt}
-\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+\titleformat{\subsection}
+{\bfseries\fontsize{14}{16}\selectfont}
+{\thesubsection}
+{1em}
+{}
 
-\setlength{\parskip}{0.6em}
-\setlength{\parindent}{0pt}
+%=============================================================
+% CUSTOM FONT COMMANDS
+%=============================================================
+\newcommand{\TitleFont}{\fontsize{24}{28}\selectfont\bfseries}
+\newcommand{\HeadingFont}{\fontsize{16}{20}\selectfont\bfseries}
+\newcommand{\SubHeadingFont}{\fontsize{14}{18}\selectfont\bfseries}
+\newcommand{\NormalFont}{\fontsize{12}{16}\selectfont}
+
+\newcommand{\emptypage}{\thispagestyle{empty}}
