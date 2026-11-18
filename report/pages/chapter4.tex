@@ -1,0 +1,98 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         CHAPTER 4: IMPLEMENTATION AND KEY FEATURES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Implementation and Key Features}
+\label{chap:impl}
+
+\section{Debounced Real-Time Search and Weighted Ranking}
+To achieve instantaneous search without flooding the server with network requests during fast typing, the client-side search box implements a 400-millisecond debounce mechanism.
+
+\subsection{Client-Side Debounce Logic}
+When a user types in the search field, any pending timer is cleared, and a new timer is instantiated. An API call is dispatched only when the candidate pauses typing for at least 400ms:
+
+\begin{lstlisting}[language=JavaScript, caption={Client-Side Search Debouncing Implementation}]
+$('#search-input').on('input', function() {
+    clearTimeout(searchDebounceTimer);
+    const query = $(this).val().trim();
+    
+    if (query.length === 0) {
+        resetDashboardSearch();
+        return;
+    }
+    
+    searchDebounceTimer = setTimeout(function() {
+        executeSearch(query);
+    }, 400); // 400ms debounce interval
+});
+\end{lstlisting}
+
+\subsection{Weighted Relevance Scoring Algorithm}
+On the backend, incoming queries are tokenized, stripped of English stop words (e.g., ``the'', ``is'', ``what'', ``how''), and evaluated through a dynamic weighted SQL relevance formula:
+\begin{equation}
+\text{Relevance Score} = \sum_{w \in \text{Keywords}} \left( 4 \cdot \mathbb{I}_{\text{question}}(w) + 3 \cdot \mathbb{I}_{\text{tags}}(w) + 1 \cdot \mathbb{I}_{\text{answer}}(w) \right)
+\label{eq:scoring}
+\end{equation}
+where $\mathbb{I}_{\text{field}}(w)$ is an indicator function returning 1 if term $w$ appears within the field and 0 otherwise. Questions with highest aggregate relevance scores are returned first.
+
+\section{On-Demand Generative AI Pipeline}
+The star capability of OmniFAQ AI is its self-learning loop orchestrated through the Google Gemini API.
+
+\subsection{Synthesis Pipeline Workflow}
+\begin{enumerate}
+    \item When a user searches for an uncataloged technology (e.g., ``Docker'', ``Kubernetes'', or ``Redis''), the system returns zero matches and displays an interactive ``Generate Live AI Questions'' action.
+    \item Upon user trigger, \texttt{handleGenerateAiQuestions()} in \texttt{api.php} constructs an engineering prompt enforcing strict JSON output:
+\begin{lstlisting}[language=PHP, caption={Gemini API Integration and Structured Prompt Formatting}]
+$prompt = 'Generate exactly 3 to 4 realistic technical interview questions on the topic: "' . $topic . '". ' .
+          'Return a JSON array of objects. Each object must have: ' .
+          '"question" (interview question), ' .
+          '"answer" (comprehensive model answer with code/concepts), ' .
+          '"category" (topic name), ' .
+          '"difficulty" ("Easy", "Medium", or "Hard"), and ' .
+          '"tags" (comma-separated lowercase tags). ' .
+          'Return ONLY raw JSON array without markdown outside JSON.';
+\end{lstlisting}
+    \item The request is posted over HTTPS to Google's Generative Language API endpoint:
+    \begin{equation}
+    \texttt{https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=...}
+    \end{equation}
+    \item \textbf{Automated Database Persistence:} The synthesized JSON array is sanitized. Each generated question is automatically inserted into the \texttt{faqs} table using prepared statements:
+\begin{lstlisting}[language=PHP, caption={Automatic Persistence of AI-Generated Content}]
+$insertStmt = $pdo->prepare("INSERT INTO faqs (question, answer, category, difficulty, tags) VALUES (?, ?, ?, ?, ?)");
+foreach ($questions as $qItem) {
+    $insertStmt->execute([
+        $qItem['question'],
+        $qItem['answer'],
+        $qItem['category'],
+        $qItem['difficulty'],
+        $qItem['tags']
+    ]);
+}
+\end{lstlisting}
+    \item The search telemetry record is marked with \texttt{is\_unresolved = 0}, immediately converting an unresolved query into an accessible learning resource.
+\end{enumerate}
+
+\section{Interactive Practice and Keyword Evaluation Engine}
+To promote active recall over passive reading, candidates can collapse the model answer and enter their own response in an interactive practice text area.
+
+\subsection{Evaluation Mechanism}
+Upon clicking ``Submit Practice Answer'', the system extracts key architectural concepts mapped to the question domain (e.g., for \textit{Closures}: lexical scope, outer function, retention, data privacy). The candidate's response is parsed, and an objective coverage score is computed:
+\begin{equation}
+\text{Coverage Score} = \left( \frac{|\text{Matched Key Concepts}|}{|\text{Expected Key Concepts}|} \right) \times 100\%
+\end{equation}
+If the score exceeds 70\%, a green badge with celebratory feedback is displayed; otherwise, an encouraging improvement prompt lists the specific technical concepts omitted from the answer.
+
+\section{Role-Based Access Control and Cryptographic Security}
+User authentication enforces strict modern web standards:
+\begin{itemize}
+    \item \textbf{Bcrypt Hashing:} Passwords are never stored in plaintext. They are encrypted using PHP's native \texttt{password\_hash(\$password, PASSWORD\_DEFAULT)} implementing the salted Blowfish (Bcrypt) cipher.
+    \item \textbf{Verification:} During login, authentication is evaluated through \texttt{password\_verify(\$password, \$user['password'])}.
+    \item \textbf{Role Permissions:} Users are segregated into \texttt{user} and \texttt{admin} tiers. The frontend adapts its navigation dynamically based on role claims stored in session memory.
+\end{itemize}
+
+\section{Administrative Telemetry and Knowledge Gap Analysis}
+The platform logs every search transaction within the \texttt{search\_analytics} table. The administrative control center computes real-time operational indicators:
+\begin{equation}
+\text{Resolution Rate} = \left( \frac{\text{Total Searches} - \text{Unresolved Searches}}{\text{Total Searches}} \right) \times 100\%
+\end{equation}
+Administrators are provided with an aggregated view of the \textbf{Top 10 Unresolved Queries}, enabling curriculum designers and mentors to pinpoint exact areas where students encounter knowledge deficits.

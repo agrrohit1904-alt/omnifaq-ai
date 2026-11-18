@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         CHAPTER 2: LITERATURE SURVEY & TECH STACK
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Literature Survey and Technology Stack}
+\label{chap:lit_tech}
+
+\section{Literature Survey of Existing Platforms}
+A thorough comparative analysis of prevailing technical interview and developer learning platforms reveals distinct architectural paradigms and trade-offs.
+
+\subsection{Analysis of Existing Solutions}
+\begin{enumerate}
+    \item \textbf{LeetCode / HackerRank:} These platforms excel in algorithmic puzzle solving and automated test execution across various programming languages. However, they place virtually no emphasis on high-level system design trade-offs, language runtime internals (e.g., JavaScript event loop, microtask queues), architectural design patterns, or structured verbal explanation techniques.
+    \item \textbf{GeeksforGeeks / InterviewBit:} These portals feature extensive catalogs of interview questions. Nonetheless, they operate on static content repositories maintained by manual editorial teams. They cannot dynamically generate new, high-quality interview scenarios for emerging open-source technologies or custom candidate queries.
+    \item \textbf{General AI Chatbots (ChatGPT / Claude):} While general-purpose LLMs can answer any programming question, they provide an uncurated, free-form experience lacking structured difficulty grading, persistent taxonomy, progress tracking, and administrative analytics tailored for learning cohorts.
+\end{enumerate}
+
+\begin{table}[h!]
+\centering
+\caption{Comparative Matrix of Technical Interview Platforms}
+\label{tab:comparison}
+\begin{tabularx}{\textwidth}{lcccc}
+\toprule
+\textbf{Evaluation Criteria} & \textbf{LeetCode} & \textbf{GeeksforGeeks} & \textbf{Raw AI Chat} & \textbf{OmniFAQ AI} \\
+\midrule
+Curated Tech Domains & Algorithms Only & Yes & No & \textbf{Yes (5 Domains)} \\
+Structured Model Answers & Minimal & Partial & Variable & \textbf{Comprehensive} \\
+On-Demand Topic Generation & No & No & Yes & \textbf{Yes (Gemini AI)} \\
+Self-Learning Persistence & No & No & No & \textbf{Yes (Auto-Save DB)} \\
+Keyword Answer Practice & No & No & No & \textbf{Yes (Interactive)} \\
+Unresolved Search Analytics & No & No & No & \textbf{Yes (Admin Panel)} \\
+Zero-Config Dual DB Support & No & N/A & N/A & \textbf{Yes (MySQL/SQLite)} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Frontend Technology Stack}
+The presentation tier of OmniFAQ AI is engineered as an ultra-responsive Single Page Application (SPA) designed to run seamlessly across desktops, tablets, and mobile devices without heavy client-side bundlers.
+
+\subsection{HTML5 and CSS3 Custom Glassmorphism}
+The user interface leverages modern CSS3 properties, including CSS Custom Properties (variables), Flexbox, CSS Grid, and \texttt{backdrop-filter: blur(20px)} for high-contrast glassmorphic aesthetics. A carefully selected dark-slate teal color scheme (\#112F3B) with glowing cyan accents (\#0891B2, \#06B6D4) provides visual comfort during extended study sessions. Crucially, the entire core stylesheet is inlined into the primary markup, eliminating render-blocking network waterfalls and preventing unstyled layout shifts (FOUC).
+
+\subsection{jQuery 3.7.1 and DOM Event Architecture}
+jQuery is employed to handle client-side view routing (\texttt{switchView}), form serialization, debounced asynchronous HTTP queries, accordion-style answer reveals, and dynamic DOM injection of question cards without necessitating bulky virtual DOM frameworks.
+
+\subsection{Lucide Modern Vector Icons}
+Lucide Icons are utilized across the navigational headers, difficulty badges, input adornments, and action buttons, providing crisp SVG visuals with near-zero runtime footprint.
+
+\section{Backend Architecture: PHP 8.2 REST API}
+The business logic tier is powered by PHP 8.2, chosen for its mature ecosystem, high execution speed, robust native standard library, and exceptional deployment portability.
+
+\subsection{RESTful Router Pattern}
+Rather than scattering logic across numerous detached script files, backend communication is channeled through a centralized API controller (\texttt{api.php}). The router parses incoming HTTP requests (both URL query parameters and raw JSON payloads via \texttt{php://input}), enforces CORS headers, validates user roles, dispatches execution to designated handler functions, and emits standardized JSON responses.
+
+\subsection{Database Abstraction with PDO}
+All database interactions are conducted via the PHP Data Objects (PDO) extension utilizing a thread-safe Singleton connection handler. Prepared statements with explicit parameter binding are utilized exclusively, eliminating SQL injection attack vectors.
+
+\section{Database Architecture: Dual-Driver Engine}
+A distinguishing architectural achievement of OmniFAQ AI is its resilient dual-driver database abstraction implemented in \texttt{db.php}:
+\begin{enumerate}
+    \item \textbf{MySQL / MariaDB Cloud Engine:} If environment variables (\texttt{DB\_HOST}, \texttt{DB\_USER}, etc.) are detected, the backend connects to an enterprise MySQL instance utilizing InnoDB storage engines and UTF-8 mb4 encoding for full-text search indexing.
+    \item \textbf{Zero-Config SQLite Embedded Engine:} If no remote database is configured (or if MySQL connectivity times out), the system gracefully falls back to an embedded SQLite3 database (\texttt{database.sqlite}). On its initial launch, the system automatically executes schema definitions and seeds eighteen expert technical interview questions and default administrator accounts.
+\end{enumerate}
+
+\section{Artificial Intelligence Integration: Google Gemini API}
+For on-demand question synthesis, OmniFAQ AI interfaces with the \textbf{Google Gemini API} (\texttt{gemini-2.5-flash}). Gemini was selected for its high processing speed, state-of-the-art technical reasoning, and support for native structured JSON outputs (\texttt{responseMimeType: "application/json"}). Requests are transmitted via backend cURL routines, shielding the client browser from exposing API keys.
+
+\section{Containerization and Cloud Deployment}
+The application is fully containerized using an official \texttt{php:8.2-apache} base image. A dynamically evaluated entrypoint command substitutes Apache's listening port at container startup (\texttt{sed -i 's/Listen [0-9]*/Listen \$\{PORT:-80\}/'}), making the container compliant with cloud environments such as \textbf{Render} and \textbf{Railway} that allocate arbitrary port numbers dynamically.

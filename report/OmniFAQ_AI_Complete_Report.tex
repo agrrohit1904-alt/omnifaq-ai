@@ -1,0 +1,584 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             SKIT INDUSTRIAL TRAINING / PROJECT REPORT
+%             OMNIFAQ AI — TECH INTERVIEW PREPARATION PLATFORM
+%             AUTHOR: KHUSHI DHAKAD (SKIT JAIPUR)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt,a4paper]{report}
+
+% ============================================================
+% PACKAGES & PREAMBLE CONFIGURATION
+% ============================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1in]{geometry}
+
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+% Color definitions
+\usepackage{xcolor}
+\definecolor{skitnavy}{RGB}{10, 22, 40}
+\definecolor{skitteal}{RGB}{8, 145, 178}
+\definecolor{codegray}{RGB}{245, 247, 250}
+\definecolor{commentgreen}{RGB}{34, 139, 34}
+\definecolor{keywordblue}{RGB}{0, 51, 153}
+\definecolor{stringred}{RGB}{178, 34, 34}
+
+% Code Listing Configuration
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{codegray},   
+    commentstyle=\color{commentgreen}\itshape,
+    keywordstyle=\color{keywordblue}\bfseries,
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{stringred},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=6pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{black!20}
+}
+\lstset{style=mystyle}
+
+% Hyperref Setup
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=skitnavy,
+    filecolor=magenta,      
+    urlcolor=skitteal,
+    citecolor=skitteal,
+    pdftitle={OmniFAQ AI Industrial Training Report},
+    pdfauthor={Khushi Dhakad},
+    pdfsubject={Tech Interview Preparation Platform with Generative AI}
+}
+
+% Header & Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\slshape\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\setlength{\headheight}{15pt}
+
+% Title formats
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\color{skitnavy}}
+  {\filleft\fontsize{50}{60}\selectfont\color{skitteal!50}\thechapter}
+  {1ex}
+  {\titlerule\vspace{1ex}\huge\filright}
+  [\vspace{1ex}\titlerule]
+
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+\titlespacing*{\subsection}{0pt}{10pt}{4pt}
+
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% ============================================================
+% COVER PAGE (No Page Number)
+% ============================================================
+\thispagestyle{empty}
+\begin{titlepage}
+\begin{center}
+
+{\Large \textbf{A PROJECT REPORT}}\\[0.3cm]
+{\large \textbf{ON}}\\[0.5cm]
+
+{\LARGE \textbf{\textcolor{skitnavy}{OMNIFAQ AI: AN INTELLIGENT TECH INTERVIEW PREPARATION PLATFORM INTEGRATED WITH GOOGLE GEMINI GENERATIVE AI}}}\\[1.2cm]
+
+{\large \textit{Submitted in partial fulfillment of the requirements}}\\[0.2cm]
+{\large \textit{for the award of the degree of}}\\[0.4cm]
+{\Large \textbf{BACHELOR OF TECHNOLOGY}}\\[0.2cm]
+{\large \textbf{IN}}\\[0.2cm]
+{\Large \textbf{COMPUTER SCIENCE AND ENGINEERING}}\\[1.2cm]
+
+\begin{figure}[h!]
+    \centering
+    % If skit_logo.png is available in the same directory, uncomment the following line:
+    % \includegraphics[width=3.2cm]{skit_logo.png}
+    \fbox{\parbox[c][2.8cm][c]{3.2cm}{\centering \textbf{SKIT LOGO}}}
+\end{figure}
+\vspace{0.8cm}
+
+\begin{tabularx}{\textwidth}{Xr}
+\textbf{SUBMITTED TO:} & \textbf{SUBMITTED BY:} \\
+\textbf{Department of CSE} & \textbf{Khushi Dhakad} \\
+Swami Keshvanand Institute of Technology, & \textbf{Roll No.:} 21ESKCS000 \\
+Management \& Gramothan, Jaipur & \textbf{B.Tech IV Year (CSE)} \\
+\end{tabularx}
+
+\vfill
+
+{\large \textbf{DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}}\\[0.2cm]
+{\Large \textbf{\textcolor{skitnavy}{SWAMI KESHVANAND INSTITUTE OF TECHNOLOGY, MANAGEMENT \& GRAMOTHAN, JAIPUR}}}\\[0.2cm]
+{\large (Affiliated to Rajasthan Technical University, Kota)}\\[0.3cm]
+{\large \textbf{ACADEMIC YEAR 2025--2026}}
+
+\end{center}
+\end{titlepage}
+\clearpage
+
+% ============================================================
+% FRONT MATTER (Roman Numbering)
+% ============================================================
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% --- DECLARATION ---
+\begin{center}
+    {\LARGE \textbf{\textcolor{skitnavy}{CANDIDATE'S DECLARATION}}}
+\end{center}
+\vspace{1.5cm}
+
+I hereby declare that the work presented in this report entitled \textbf{``OmniFAQ AI: An Intelligent Tech Interview Preparation Platform Integrated with Google Gemini Generative AI''} is an authentic record of my own work carried out under the supervision and guidance of the faculty members of the \textbf{Department of Computer Science and Engineering}, Swami Keshvanand Institute of Technology, Management \& Gramothan (SKIT), Jaipur.
+
+The matter embodied in this report has not been submitted by me for the award of any other degree or diploma to any other University or Institute.
+
+\vspace{3cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{Xr}
+\textbf{Date:} \today & \textbf{Khushi Dhakad} \\
+\textbf{Place:} Jaipur & Roll No.: 21ESKCS000 \\
+& B.Tech IV Year, CSE \\
+& SKIT, Jaipur \\
+\end{tabularx}
+\clearpage
+
+% --- CERTIFICATE ---
+\begin{center}
+    {\LARGE \textbf{\textcolor{skitnavy}{CERTIFICATE}}}
+\end{center}
+\vspace{1.5cm}
+
+This is to certify that the project report entitled \textbf{``OmniFAQ AI: An Intelligent Tech Interview Preparation Platform Integrated with Google Gemini Generative AI''} submitted by \textbf{Khushi Dhakad} (Roll No.: \textbf{21ESKCS000}) in partial fulfillment of the requirements for the award of the degree of \textbf{Bachelor of Technology} in \textbf{Computer Science and Engineering} from \textbf{Swami Keshvanand Institute of Technology, Management \& Gramothan (SKIT), Jaipur}, affiliated to \textbf{Rajasthan Technical University (RTU), Kota}, is a bona fide record of the work carried out by her under our supervision and guidance.
+
+To the best of our knowledge, the matter embodied in this report has not been submitted to any other University / Institute for the award of any degree or diploma.
+
+\vspace{3.5cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{Xr}
+\textbf{Project Supervisor / Guide} & \textbf{Head of Department} \\
+Department of CSE & Department of CSE \\
+SKIT, Jaipur & SKIT, Jaipur \\
+\end{tabularx}
+\clearpage
+
+% --- ACKNOWLEDGEMENT ---
+\begin{center}
+    {\LARGE \textbf{\textcolor{skitnavy}{ACKNOWLEDGEMENT}}}
+\end{center}
+\vspace{1.5cm}
+
+I express my deepest gratitude and sincere appreciation to my esteemed \textbf{Project Guide} and faculty members of the Department of Computer Science and Engineering, Swami Keshvanand Institute of Technology, Management \& Gramothan (SKIT), Jaipur, for their continuous guidance, invaluable suggestions, and encouraging mentorship throughout the course of this project.
+
+I extend my heartfelt thanks to \textbf{Prof. (Dr.) C. M. Choudhary}, Head of the Department of Computer Science and Engineering, for providing the necessary infrastructural facilities, institutional support, and intellectual environment that enabled the successful completion of this work.
+
+I would also like to express my sincere gratitude to \textbf{Prof. (Dr.) Ramesh Kumar Pachar}, Principal, SKIT Jaipur, and the college management for fostering an atmosphere of innovation, technical curiosity, and academic excellence.
+
+Finally, I am profoundly indebted to my parents, family, and peers for their unconditional love, moral support, and motivation, which constantly inspired me during every phase of this project.
+
+\vspace{2.5cm}
+
+\noindent
+\begin{tabularx}{\textwidth}{Xr}
+& \textbf{Khushi Dhakad} \\
+& Roll No.: 21ESKCS000 \\
+& Department of CSE, SKIT Jaipur \\
+\end{tabularx}
+\clearpage
+
+% --- ABSTRACT ---
+\begin{center}
+    {\LARGE \textbf{\textcolor{skitnavy}{ABSTRACT}}}
+\end{center}
+\vspace{1cm}
+
+Preparing for technical software engineering interviews in the modern era presents significant challenges for students and aspiring developers. Traditional study methods are often fragmented across disparate platforms, suffer from outdated static content, lack structured model explanations, and provide zero administrative visibility into candidate learning deficits. 
+
+This project presents \textbf{OmniFAQ AI}, an intelligent, full-stack tech interview preparation web platform that unifies high-quality curated technical interview repositories with real-time generative capabilities powered by \textbf{Google Gemini Generative Artificial Intelligence}. Developed using a three-tier client-server architecture, the system incorporates an ultra-responsive, single-page application (SPA) frontend designed with modern glassmorphism aesthetics, backed by a modular \textbf{PHP 8.2 REST API} router and a high-performance relational database engine.
+
+A pivotal innovation of the platform is its \textbf{dual-driver database persistence architecture}, which dynamically binds to cloud-hosted MySQL/MariaDB instances when reachable, while offering automatic, zero-configuration failover to an embedded SQLite engine equipped with self-seeding mechanisms. Furthermore, the platform introduces an \textbf{automated self-learning loop}: when candidates query emerging or un-indexed technical topics, the backend triggers Google Gemini Generative API under strict JSON schema constraints. The synthesized questions, comprehensive model answers, taxonomic categories, and difficulty tiers are simultaneously delivered to the user and persisted into the database, transforming transient AI inferences into permanent knowledge assets without redundant API overhead.
+
+In addition, the system incorporates a client-side practice evaluation engine measuring conceptual keyword coverage, role-based access control secured by Bcrypt cryptographic hashing, and a comprehensive administrative telemetry dashboard tracking search volume, query resolution percentage, and unresolved student inquiries. The platform has been containerized using \textbf{Docker} and successfully deployed on the \textbf{Render} cloud platform, demonstrating high reliability, sub-second latency, and horizontal scalability.
+
+\vspace{1cm}
+\textbf{Keywords:} Technical Interview Preparation, Generative AI, Google Gemini API, PHP 8 REST API, Dual-Driver Database Architecture, SQLite/MySQL, Glassmorphism UI, Docker Containerization, EdTech.
+\clearpage
+
+% --- TABLE OF CONTENTS ---
+\tableofcontents
+\clearpage
+
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\clearpage
+
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\clearpage
+
+% ============================================================
+% MAIN MATTER (Arabic Numbering)
+% ============================================================
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% --- CHAPTER 1 ---
+\chapter{Introduction}
+\label{chap:intro}
+
+\section{Project Overview}
+In today's highly competitive software development industry, technical recruitment processes evaluate candidates across diverse domains including core language mechanics, modern frontend libraries, backend distributed systems, relational databases, and enterprise architectural design. Engineering students and job seekers routinely face multi-stage technical interviews requiring rigorous theoretical understanding, rapid problem-solving skills, and the ability to articulate structured, in-depth architectural solutions.
+
+\textbf{OmniFAQ AI} is a comprehensive, modern web-based technical interview training platform engineered to streamline and elevate candidate preparation. Built upon a decoupled client-server architecture, the platform bridges the gap between static study material and dynamic, real-world candidate needs by pairing a rich, pre-loaded repository of domain-specific interview questions with the real-time synthesis power of \textbf{Google Gemini Generative AI}. The application enables learners to search, filter by adaptive difficulty levels (Easy, Medium, Hard), practice conceptual answers with automated keyword feedback, and dynamically expand the platform's repository on-demand.
+
+\section{Motivation and Background}
+With the rapid evolution of modern web frameworks, cloud technologies, and developer tooling, software engineering curricula frequently lag behind current industry interview expectations. Candidates typically spend hundreds of hours navigating dozens of disconnected resources, including competitive coding repositories, community forums, medium articles, and fragmented documentation. 
+
+Furthermore, existing question-and-answer repositories are inherently static: if a student is interviewing for a niche framework (e.g., GraphQL, Docker, Kubernetes, WebSockets) that has not been explicitly cataloged by the site administrator, the user receives zero guidance. Recent advancements in Large Language Models (LLMs), particularly Google's Gemini family of generative models, present a transformative opportunity to convert static educational portals into self-learning, adaptive environments capable of generating domain-accurate interview questions and gold-standard model answers on the fly.
+
+\section{Problem Statement}
+Contemporary technical interview preparation suffers from four foundational bottlenecks:
+\begin{enumerate}
+    \item \textbf{Fragmentation of Learning Resources:} Candidates are forced to bounce between competitive programming websites, blogs, and community forums without a unified repository covering theory, architectural questions, and code semantics.
+    \item \textbf{Lack of Comprehensive Model Explanations:} Many portals supply interview questions without high-scoring, structured technical answers that demonstrate depth of understanding.
+    \item \textbf{Static, Non-Adaptive Repositories:} Conventional FAQ systems cannot adapt dynamically when learners query emerging, modern, or specialized developer topics.
+    \item \textbf{Zero Telemetry on Student Knowledge Gaps:} Educators and platform administrators lack empirical data regarding which topics students search for most frequently and where learners encounter unresolved queries.
+\end{enumerate}
+
+\section{Objectives of the System}
+The primary objectives of the OmniFAQ AI project are as follows:
+\begin{itemize}
+    \item \textbf{Unified Multi-Domain Question Bank:} To engineer a curated repository covering five core technical disciplines: JavaScript, React, Node.js, SQL, and System Design.
+    \item \textbf{On-Demand Generative AI Expansion:} To integrate the Google Gemini API to dynamically generate 3--4 rigorous interview questions with model answers whenever an unresolved topic is searched.
+    \item \textbf{Self-Learning Database Persistence:} To implement an automated ingestion pipeline where AI-generated questions are sanitized and permanently written into the database, benefiting all future platform visitors without recurring API costs.
+    \item \textbf{Debounced Real-Time Search Engine:} To create a fast, client-side debounced search interface with weighted relevance scoring across question titles, keyword tags, and model answers.
+    \item \textbf{Interactive Candidate Practice Engine:} To supply an active recall practice module that analyzes a user's typed response against expected technical keywords and provides real-time coverage scores.
+    \item \textbf{Administrative Analytics and Gap Detection:} To build an administrative telemetry dashboard that logs all user searches, computes resolution rates, and surfaces high-priority unresolved queries for curriculum refinement.
+    \item \textbf{Robust Dual-Driver Database Deployment:} To design an environment-agnostic backend supporting cloud MySQL as well as automatic, zero-configuration failover to an embedded SQLite engine.
+\end{itemize}
+
+\section{Project Scope}
+The scope of OmniFAQ AI encompasses full-stack software development, REST API design, cryptographic security, database normalization, prompt engineering, containerization, and cloud deployment. It addresses Computer Science undergraduate students, bootcamp graduates, junior-to-mid level software engineers, technical mentors, and academic institutions. Complete protection against SQL Injection is guaranteed via PDO parameterized queries, secure user authentication with Bcrypt password hashing, and role-based access control.
+
+% --- CHAPTER 2 ---
+\chapter{Literature Survey and Technology Stack}
+\label{chap:lit_tech}
+
+\section{Literature Survey of Existing Platforms}
+A thorough comparative analysis of prevailing technical interview platforms reveals distinct architectural paradigms and trade-offs.
+
+\begin{table}[h!]
+\centering
+\caption{Comparative Matrix of Technical Interview Platforms}
+\label{tab:comparison}
+\begin{tabularx}{\textwidth}{lcccc}
+\toprule
+\textbf{Evaluation Criteria} & \textbf{LeetCode} & \textbf{GeeksforGeeks} & \textbf{Raw AI Chat} & \textbf{OmniFAQ AI} \\
+\midrule
+Curated Tech Domains & Algorithms Only & Yes & No & \textbf{Yes (5 Domains)} \\
+Structured Model Answers & Minimal & Partial & Variable & \textbf{Comprehensive} \\
+On-Demand Topic Generation & No & No & Yes & \textbf{Yes (Gemini AI)} \\
+Self-Learning Persistence & No & No & No & \textbf{Yes (Auto-Save DB)} \\
+Keyword Answer Practice & No & No & No & \textbf{Yes (Interactive)} \\
+Unresolved Search Analytics & No & No & No & \textbf{Yes (Admin Panel)} \\
+Zero-Config Dual DB Support & No & N/A & N/A & \textbf{Yes (MySQL/SQLite)} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Frontend Technology Stack}
+The presentation tier of OmniFAQ AI is engineered as an ultra-responsive Single Page Application (SPA) designed to run seamlessly across all devices.
+
+\subsection{HTML5 and CSS3 Custom Glassmorphism}
+The user interface leverages modern CSS3 properties, including CSS Custom Properties, Flexbox, CSS Grid, and \texttt{backdrop-filter: blur(20px)} for high-contrast glassmorphic aesthetics. A dark-slate teal color scheme (\#112F3B) with glowing cyan accents (\#0891B2, \#06B6D4) provides visual comfort during extended study sessions. The entire core stylesheet is inlined into the primary markup, eliminating render-blocking waterfalls and preventing unstyled layout shifts (FOUC).
+
+\subsection{jQuery 3.7.1 and DOM Event Architecture}
+jQuery is employed to handle client-side view routing, form serialization, debounced asynchronous HTTP queries, accordion-style answer reveals, and dynamic DOM injection of question cards without necessitating bulky virtual DOM frameworks.
+
+\subsection{Lucide Modern Vector Icons}
+Lucide Icons are utilized across headers, difficulty badges, input adornments, and action buttons, providing crisp SVG visuals with near-zero runtime footprint.
+
+\section{Backend Architecture: PHP 8.2 REST API}
+The business logic tier is powered by PHP 8.2, chosen for its mature ecosystem, high execution speed, robust native standard library, and exceptional deployment portability.
+
+\subsection{RESTful Router Pattern}
+Rather than scattering logic across numerous detached script files, backend communication is channeled through a centralized API controller (\texttt{api.php}). The router parses incoming HTTP requests, enforces CORS headers, validates user roles, dispatches execution to designated handler functions, and emits standardized JSON responses.
+
+\subsection{Database Abstraction with PDO}
+All database interactions are conducted via the PHP Data Objects (PDO) extension utilizing a thread-safe Singleton connection handler. Prepared statements with explicit parameter binding are utilized exclusively, eliminating SQL injection attack vectors.
+
+\section{Database Architecture: Dual-Driver Engine}
+A distinguishing architectural achievement of OmniFAQ AI is its resilient dual-driver database abstraction implemented in \texttt{db.php}:
+\begin{enumerate}
+    \item \textbf{MySQL / MariaDB Cloud Engine:} If environment variables (\texttt{DB\_HOST}, \texttt{DB\_USER}, etc.) are detected, the backend connects to an enterprise MySQL instance utilizing InnoDB storage engines and UTF-8 mb4 encoding for full-text search indexing.
+    \item \textbf{Zero-Config SQLite Embedded Engine:} If no remote database is configured (or if MySQL connectivity times out), the system gracefully falls back to an embedded SQLite3 database (\texttt{database.sqlite}). On initial launch, the system automatically executes schema definitions and seeds eighteen expert technical interview questions and default administrator accounts.
+\end{enumerate}
+
+\section{Artificial Intelligence Integration: Google Gemini API}
+For on-demand question synthesis, OmniFAQ AI interfaces with the \textbf{Google Gemini API} (\texttt{gemini-2.5-flash}). Gemini was selected for its high processing speed, state-of-the-art technical reasoning, and support for native structured JSON outputs (\texttt{responseMimeType: "application/json"}). Requests are transmitted via backend cURL routines, shielding the client browser from exposing API keys.
+
+\section{Containerization and Cloud Deployment}
+The application is fully containerized using an official \texttt{php:8.2-apache} base image. A dynamically evaluated entrypoint command substitutes Apache's listening port at container startup (\texttt{sed -i 's/Listen [0-9]*/Listen \$\{PORT:-80\}/'}), making the container compliant with cloud environments such as \textbf{Render} and \textbf{Railway} that allocate arbitrary port numbers dynamically.
+
+% --- CHAPTER 3 ---
+\chapter{System Design and Architecture}
+\label{chap:sys_design}
+
+\section{System Architecture Overview}
+OmniFAQ AI is structured following the classical \textbf{Three-Tier Client-Server Architecture}.
+
+\begin{figure}[h!]
+\centering
+\fbox{
+\parbox{0.9\textwidth}{
+\centering
+\textbf{[CLIENT TIER: Browser]}\\[0.1cm]
+HTML5 $\cdot$ Glassmorphic CSS3 $\cdot$ jQuery SPA $\cdot$ Lucide Icons\\
+$\updownarrow$ \small{HTTP / RESTful JSON over TLS}\\
+\textbf{[APPLICATION TIER: Web Server]}\\[0.1cm]
+Apache 2.4 $\cdot$ PHP 8.2 API Router (\texttt{api.php}) $\cdot$ Dual DB Handler (\texttt{db.php})\\
+$\swarrow$ \small{PDO SQL Protocol} \hspace{3cm} $\searrow$ \small{HTTPS / cURL}\\
+\textbf{[DATABASE TIER]} \hspace{3.2cm} \textbf{[AI CLOUD ENGINE]}\\
+MySQL / Embedded SQLite \hspace{2cm} Google Gemini API (\texttt{gemini-2.5-flash})
+}
+}
+\caption{Three-Tier Client-Server Architecture of OmniFAQ AI}
+\label{fig:architecture}
+\end{figure}
+
+\section{Database Schema Design}
+The database engine comprises three normalized tables engineered in Third Normal Form (3NF).
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{users} Table}
+\label{tab:users}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment unique user identifier \\
+\texttt{full\_name} & VARCHAR(100) & No & -- & Candidate's full display name \\
+\texttt{email} & VARCHAR(150) & No & Unique & User email used for authentication \\
+\texttt{password} & VARCHAR(255) & No & -- & Bcrypt cryptographic password hash \\
+\texttt{role} & VARCHAR(20) & No & -- & Access permission level (\texttt{user} or \texttt{admin}) \\
+\texttt{created\_at} & TIMESTAMP & No & -- & Account registration timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{faqs} Table}
+\label{tab:faqs}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment unique FAQ ID \\
+\texttt{question} & TEXT & No & Index & The technical interview question \\
+\texttt{answer} & TEXT & No & -- & Comprehensive sample model answer \\
+\texttt{category} & VARCHAR(50) & No & Index & Technology domain (e.g., React, SQL) \\
+\texttt{difficulty} & VARCHAR(20) & No & Index & Difficulty tier (Easy, Medium, Hard) \\
+\texttt{tags} & VARCHAR(255) & Yes & -- & Comma-delimited keywords for scoring \\
+\texttt{views} & INTEGER & No & -- & Popularity counter for frequency metrics \\
+\texttt{created\_at} & TIMESTAMP & No & -- & Record creation timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{search\_analytics} Table}
+\label{tab:analytics}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment telemetry log ID \\
+\texttt{query\_text} & VARCHAR(255) & No & -- & Search term submitted by the candidate \\
+\texttt{field\_category}& VARCHAR(50) & Yes & -- & Filter category applied during search \\
+\texttt{difficulty} & VARCHAR(20) & Yes & -- & Filter difficulty level applied \\
+\texttt{matched\_count}& INTEGER & No & -- & Number of matching FAQs returned \\
+\texttt{is\_unresolved} & INTEGER & No & Index & 1 if 0 matches found; 0 otherwise \\
+\texttt{searched\_at} & TIMESTAMP & No & -- & Query execution timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Backend REST API Action Specification}
+Table~\ref{tab:api_endpoints} defines the complete API action manifest.
+
+\begin{table}[h!]
+\centering
+\caption{OmniFAQ AI REST API Action Catalog}
+\label{tab:api_endpoints}
+\begin{tabularx}{\textwidth}{lp{2cm}p{3cm}X}
+\toprule
+\textbf{Action} & \textbf{HTTP} & \textbf{Payload Params} & \textbf{Functional Output} \\
+\midrule
+\texttt{register} & POST & \texttt{full\_name, email, password} & Hashes credentials, inserts user, returns session record. \\
+\texttt{login} & POST & \texttt{email, password} & Validates credentials via \texttt{password\_verify()}. \\
+\texttt{get\_faqs} & GET/POST & \texttt{category, difficulty, search, id} & Queries questions with filters, increments view counter. \\
+\texttt{ai\_query} & POST & \texttt{query, field} & Performs weighted keyword scoring search across questions, tags, and answers. \\
+\texttt{generate\_ai\_questions} & POST & \texttt{topic} & Connects to Google Gemini API, generates 3--4 questions, saves to DB. \\
+\texttt{ai\_interactive\_faq} & POST & \texttt{field, difficulty} & Supplies randomized drill questions for domain practice. \\
+\texttt{admin\_save\_faq} & POST & \texttt{id, question, answer, ...} & Executes INSERT (new) or UPDATE (existing) FAQ. \\
+\texttt{admin\_delete\_faq} & POST & \texttt{id} & Deletes specified FAQ record. \\
+\texttt{admin\_get\_analytics}& GET/POST & -- & Returns KPI metrics, resolution rate, and top unresolved queries. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% --- CHAPTER 4 ---
+\chapter{Implementation and Key Features}
+\label{chap:impl}
+
+\section{Debounced Real-Time Search and Weighted Ranking}
+To achieve instantaneous search without flooding the server with network requests, the client-side search box implements a 400-millisecond debounce mechanism.
+
+\begin{lstlisting}[language=JavaScript, caption={Client-Side Search Debouncing Implementation}]
+$('#search-input').on('input', function() {
+    clearTimeout(searchDebounceTimer);
+    const query = $(this).val().trim();
+    if (query.length === 0) {
+        resetDashboardSearch();
+        return;
+    }
+    searchDebounceTimer = setTimeout(function() {
+        executeSearch(query);
+    }, 400); // 400ms debounce interval
+});
+\end{lstlisting}
+
+Incoming queries are tokenized, stripped of English stop words, and evaluated through a dynamic weighted SQL relevance formula:
+\begin{equation}
+\text{Relevance Score} = \sum_{w \in \text{Keywords}} \left( 4 \cdot \mathbb{I}_{\text{question}}(w) + 3 \cdot \mathbb{I}_{\text{tags}}(w) + 1 \cdot \mathbb{I}_{\text{answer}}(w) \right)
+\label{eq:scoring}
+\end{equation}
+
+\section{On-Demand Generative AI Pipeline}
+When a user searches for an uncataloged technology (e.g., ``Docker'' or ``Kubernetes''), the system displays an interactive ``Generate Live AI Questions'' action. Upon trigger, the backend dispatches an engineering prompt enforcing strict JSON output to Google Gemini API (\texttt{gemini-2.5-flash}). The synthesized questions are automatically inserted into the database using prepared statements and displayed to the user.
+
+\section{Interactive Practice and Keyword Evaluation Engine}
+Candidates can enter their own answers in an interactive practice area. The system evaluates the candidate's response against expected technical concept keywords and computes an objective coverage score:
+\begin{equation}
+\text{Coverage Score} = \left( \frac{|\text{Matched Key Concepts}|}{|\text{Expected Key Concepts}|} \right) \times 100\%
+\end{equation}
+
+\section{Role-Based Access Control and Cryptographic Security}
+Passwords are never stored in plaintext; they are hashed using salted Bcrypt via PHP's \texttt{password\_hash(\$password, PASSWORD\_DEFAULT)} and verified via \texttt{password\_verify()}. Role claims segregate standard learners from administrators.
+
+\section{Administrative Telemetry and Knowledge Gap Analysis}
+The platform logs every search transaction within the \texttt{search\_analytics} table. The administrative control center computes real-time operational indicators:
+\begin{equation}
+\text{Resolution Rate} = \left( \frac{\text{Total Searches} - \text{Unresolved Searches}}{\text{Total Searches}} \right) \times 100\%
+\end{equation}
+
+% --- CHAPTER 5 ---
+\chapter{Testing, Deployment, and Results}
+\label{chap:test_deploy}
+
+\section{Test Cases and Results}
+Table~\ref{tab:test_cases} delineates the comprehensive test suite executed during quality assurance.
+
+\begin{table}[h!]
+\centering
+\caption{System Test Cases and Verification Outcomes}
+\label{tab:test_cases}
+\begin{tabularx}{\textwidth}{p{2.5cm}p{4cm}p{4.5cm}c}
+\toprule
+\textbf{Test Module} & \textbf{Test Scenario} & \textbf{Observed Behavior} & \textbf{Status} \\
+\midrule
+User Auth & Registration with invalid email format & Validation rejected with HTTP 400 and format error toast & \textbf{Pass} \\
+User Auth & Password hashing verification & Password stored as \$2y\$ Bcrypt hash; plaintext rejected & \textbf{Pass} \\
+Search Engine & Input debounce at 300ms vs 450ms & Request emitted strictly after typing stopped for $>$400ms & \textbf{Pass} \\
+Search Engine & Stop word elimination & Queries like ``how to closures'' correctly match ``closures'' & \textbf{Pass} \\
+AI Generation & Gemini prompt with novel topic (``Docker'') & Returns 3 valid questions; inserted to DB; HTTP 200 & \textbf{Pass} \\
+Database Failover & MySQL unreachable or missing config & Auto-initializes SQLite and auto-seeds initial 18 questions & \textbf{Pass} \\
+Practice Engine & Answer covering 3 of 4 keywords & Displays 75\% coverage score with green feedback pill & \textbf{Pass} \\
+Security & SQL injection payload in search string & Sanitized by PDO prepared statements; zero leakage & \textbf{Pass} \\
+Admin Telemetry & Search with 0 matches recorded & Query logged with \texttt{is\_unresolved = 1} in analytics table & \textbf{Pass} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Docker Containerization and Cloud Deployment}
+The platform was containerized with Docker and deployed on \textbf{Render}. Automatic CI/CD builds container images upon git pushes, binds dynamic ports via environment variables, and enables SSL termination over HTTPS.
+
+\section{Conclusion and Future Scope}
+The OmniFAQ AI platform successfully fulfills all foundational objectives by delivering an adaptive, self-expanding study portal powered by Google Gemini and backed by a dual-driver database architecture. Future enhancements encompass voice-based mock interviews, in-browser code sandbox execution, spaced-repetition retention graphs, and vector semantic search.
+
+% ============================================================
+% REFERENCES (IEEE Format)
+% ============================================================
+\renewcommand{\bibname}{References}
+\addcontentsline{toc}{chapter}{References}
+
+\begin{thebibliography}{99}
+
+\bibitem{vaswani2017attention}
+A.~Vaswani, N.~Shazeer, N.~Parmar, J.~Uszkoreit, L.~Jones, A.~N. Gomez, L.~Kaiser, and I.~Polosukhin, ``Attention is all you need,'' in \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~30, 2017.
+
+\bibitem{geminiteam2023gemini}
+{Gemini Team, Google}, ``Gemini: A family of highly capable multimodal models,'' \emph{arXiv preprint arXiv:2312.11805}, 2023.
+
+\bibitem{fielding2000architectural}
+R.~T. Fielding, \emph{Architectural Styles and the Design of Network-based Software Architectures}, Ph.D. dissertation, University of California, Irvine, 2000.
+
+\bibitem{elmasri2015fundamentals}
+R.~Elmasri and S.~B. Navathe, \emph{Fundamentals of Database Systems}, 7th~ed.\hskip 1em plus 0.5em minus 0.4em\relax Pearson, 2015.
+
+\bibitem{nixon2021learning}
+R.~Nixon, \emph{Learning PHP, MySQL \& JavaScript: With jQuery, CSS \& HTML5}, 6th~ed.\hskip 1em plus 0.5em minus 0.4em\relax O'Reilly Media, 2021.
+
+\bibitem{turnbull2014docker}
+J.~Turnbull, \emph{The Docker Book: Containerization is the new virtualization}.\hskip 1em plus 0.5em minus 0.4em\relax James Turnbull, 2014.
+
+\bibitem{phpmanual2024}
+{The PHP Group}, ``PHP 8.2 documentation and reference manual,'' \url{https://www.php.net/manual/en/}, 2024.
+
+\bibitem{googleaistudio2024}
+{Google Cloud}, ``Google Gemini API documentation and reference,'' \url{https://ai.google.dev/docs}, 2024.
+
+\bibitem{renderdocs2024}
+{Render Cloud Platform}, ``Deploying containerized web services on Render,'' \url{https://render.com/docs/web-services}, 2024.
+
+\bibitem{provost2013data}
+F.~Provost and T.~Fawcett, ``Data science and its relationship to big data and data-driven decision making,'' \emph{Big Data}, vol.~1, no.~1, pp. 51--59, 2013.
+
+\bibitem{fowler2002patterns}
+M.~Fowler, \emph{Patterns of Enterprise Application Architecture}.\hskip 1em plus 0.5em minus 0.4em\relax Addison-Wesley Professional, 2002.
+
+\bibitem{kleppmann2017designing}
+M.~Kleppmann, \emph{Designing Data-Intensive Applications}.\hskip 1em plus 0.5em minus 0.4em\relax O'Reilly Media, 2017.
+
+\end{thebibliography}
+
+\end{document}

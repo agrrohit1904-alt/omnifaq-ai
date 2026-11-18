@@ -1,0 +1,146 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         CHAPTER 3: SYSTEM DESIGN AND ARCHITECTURE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{System Design and Architecture}
+\label{chap:sys_design}
+
+\section{System Architecture Overview}
+OmniFAQ AI is structured following the classical \textbf{Three-Tier Client-Server Architecture}, ensuring strong separation of concerns, high maintainability, and horizontal scalability.
+
+\subsection{Architectural Layers}
+\begin{enumerate}
+    \item \textbf{Tier 1: Presentation Layer (Client Tier)}
+    Consists of the HTML5/CSS3 Single Page Application running in the user's web browser. It manages user authentication state via \texttt{localStorage}, renders dynamic view transitions, captures user keystrokes for debounced searches, and computes client-side practice answer evaluation.
+    \item \textbf{Tier 2: Application / Business Logic Layer (Server Tier)}
+    Encapsulated inside \texttt{api.php}. It validates incoming payloads, hashes passwords using Bcrypt, manages session authorizations, executes the weighted relevance scoring algorithm, formats prompt schemas, and coordinates outbound cURL requests to Google Gemini.
+    \item \textbf{Tier 3: Data and Persistence Layer}
+    Comprises the relational database (MySQL or SQLite) and the remote Google Gemini Generative AI infrastructure.
+\end{enumerate}
+
+\begin{figure}[h!]
+\centering
+\fbox{
+\parbox{0.9\textwidth}{
+\centering
+\textbf{[CLIENT TIER: Browser]}\\[0.1cm]
+HTML5 $\cdot$ Glassmorphic CSS3 $\cdot$ jQuery SPA $\cdot$ Lucide Icons\\
+$\updownarrow$ \small{HTTP / RESTful JSON over TLS}\\
+\textbf{[APPLICATION TIER: Web Server]}\\[0.1cm]
+Apache 2.4 $\cdot$ PHP 8.2 API Router (\texttt{api.php}) $\cdot$ Dual DB Handler (\texttt{db.php})\\
+$\swarrow$ \small{PDO SQL Protocol} \hspace{3cm} $\searrow$ \small{HTTPS / cURL}\\
+\textbf{[DATABASE TIER]} \hspace{3.2cm} \textbf{[AI CLOUD ENGINE]}\\
+MySQL / Embedded SQLite \hspace{2cm} Google Gemini API (\texttt{gemini-2.5-flash})
+}
+}
+\caption{Three-Tier Client-Server Architecture of OmniFAQ AI}
+\label{fig:architecture}
+\end{figure}
+
+\section{Data Flow Modeling}
+Data Flow Diagrams illustrate the trajectory of information through the OmniFAQ AI ecosystem.
+
+\subsection{Level 0 DFD (Context Diagram)}
+At Level 0, the system is viewed as a unified processing entity interacting with two primary external entities: Candidates/Users, Administrators, and the External Google Gemini API.
+\begin{itemize}
+    \item \textbf{User Inputs:} Search terms, registration credentials, topic generation triggers, and practice answers.
+    \item \textbf{System Outputs:} Scored FAQ lists, model technical answers, practice coverage feedback, and authentication tokens.
+    \item \textbf{Admin Interactions:} Content additions/modifications and analytical telemetry retrieval.
+    \item \textbf{Gemini API Interactions:} Structured prompt delivery and JSON question array ingestion.
+\end{itemize}
+
+\subsection{Level 1 DFD}
+The Level 1 DFD decomposes the system into discrete sub-processes:
+\begin{enumerate}
+    \item \textbf{Process 1.0 (Authentication):} Validates credentials, executes \texttt{password\_verify}, and manages role tokens.
+    \item \textbf{Process 2.0 (Search \& Retrieval):} Cleans user query, removes stop words, calculates weighted relevance scores, and reads from the \texttt{faqs} table.
+    \item \textbf{Process 3.0 (AI Generation \& Ingestion):} Dispatches structured prompt to Google Gemini API, validates synthesized JSON schema, writes new questions to \texttt{faqs}, and updates analytics.
+    \item \textbf{Process 4.0 (Practice Evaluation):} Evaluates user's formulated answers against conceptual keyword tokens.
+    \item \textbf{Process 5.0 (Admin Telemetry):} Aggregates total searches, calculates resolution percentage, and tracks top unresolved topics.
+\end{enumerate}
+
+\section{Database Schema Design and Data Modeling}
+The database engine (\texttt{ai\_faq\_db}) comprises three normalized tables engineered in Third Normal Form (3NF).
+
+\subsection{Table Specifications}
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{users} Table}
+\label{tab:users}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment unique user identifier \\
+\texttt{full\_name} & VARCHAR(100) & No & -- & Candidate's full display name \\
+\texttt{email} & VARCHAR(150) & No & Unique & User email used for authentication \\
+\texttt{password} & VARCHAR(255) & No & -- & Bcrypt cryptographic password hash \\
+\texttt{role} & VARCHAR(20) & No & -- & Access permission level (\texttt{user} or \texttt{admin}) \\
+\texttt{created\_at} & TIMESTAMP & No & -- & Account registration timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{faqs} Table}
+\label{tab:faqs}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment unique FAQ ID \\
+\texttt{question} & TEXT & No & Index & The technical interview question \\
+\texttt{answer} & TEXT & No & -- & Comprehensive sample model answer \\
+\texttt{category} & VARCHAR(50) & No & Index & Technology domain (e.g., React, SQL) \\
+\texttt{difficulty} & VARCHAR(20) & No & Index & Difficulty tier (Easy, Medium, Hard) \\
+\texttt{tags} & VARCHAR(255) & Yes & -- & Comma-delimited keywords for scoring \\
+\texttt{views} & INTEGER & No & -- & Popularity counter for frequency metrics \\
+\texttt{created\_at} & TIMESTAMP & No & -- & Record creation timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{Database Schema: \texttt{search\_analytics} Table}
+\label{tab:analytics}
+\begin{tabularx}{\textwidth}{llllX}
+\toprule
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Null} & \textbf{Key} & \textbf{Description} \\
+\midrule
+\texttt{id} & INTEGER & No & Primary & Auto-increment telemetry log ID \\
+\texttt{query\_text} & VARCHAR(255) & No & -- & Search term submitted by the candidate \\
+\texttt{field\_category}& VARCHAR(50) & Yes & -- & Filter category applied during search \\
+\texttt{difficulty} & VARCHAR(20) & Yes & -- & Filter difficulty level applied \\
+\texttt{matched\_count}& INTEGER & No & -- & Number of matching FAQs returned \\
+\texttt{is\_unresolved} & INTEGER & No & Index & 1 if 0 matches found; 0 otherwise \\
+\texttt{searched\_at} & TIMESTAMP & No & -- & Query execution timestamp \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Backend REST API Action Specification}
+All client-server exchanges are serialized over HTTP POST/GET to \texttt{api.php}. Table~\ref{tab:api_endpoints} defines the complete API action manifest.
+
+\begin{table}[h!]
+\centering
+\caption{OmniFAQ AI REST API Action Catalog}
+\label{tab:api_endpoints}
+\begin{tabularx}{\textwidth}{lp{2cm}p{3cm}X}
+\toprule
+\textbf{Action} & \textbf{HTTP} & \textbf{Payload Params} & \textbf{Functional Output} \\
+\midrule
+\texttt{register} & POST & \texttt{full\_name, email, password} & Hashes credentials, inserts user, returns session record. \\
+\texttt{login} & POST & \texttt{email, password} & Validates credentials via \texttt{password\_verify()}. \\
+\texttt{get\_faqs} & GET/POST & \texttt{category, difficulty, search, id} & Queries questions with filters, increments view counter. \\
+\texttt{ai\_query} & POST & \texttt{query, field} & Performs weighted keyword scoring search across questions, tags, and answers. \\
+\texttt{generate\_ai\_questions} & POST & \texttt{topic} & Connects to Google Gemini API, generates 3--4 questions, saves to DB. \\
+\texttt{ai\_interactive\_faq} & POST & \texttt{field, difficulty} & Supplies randomized drill questions for domain practice. \\
+\texttt{admin\_save\_faq} & POST & \texttt{id, question, answer, ...} & Executes INSERT (new) or UPDATE (existing) FAQ. \\
+\texttt{admin\_delete\_faq} & POST & \texttt{id} & Deletes specified FAQ record. \\
+\texttt{admin\_get\_analytics}& GET/POST & -- & Returns KPI metrics, resolution rate, and top unresolved queries. \\
+\bottomrule
+\end{tabularx}
+\end{table}

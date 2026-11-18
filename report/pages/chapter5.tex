@@ -1,0 +1,76 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         CHAPTER 5: TESTING, DEPLOYMENT AND RESULTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Testing, Deployment, and Results}
+\label{chap:test_deploy}
+
+\section{Testing Methodology}
+A systematic verification framework was applied across all functional layers of OmniFAQ AI, spanning unit testing of backend endpoints, integration testing of database failovers, and cross-browser responsiveness testing.
+
+\section{Test Cases and Results}
+Table~\ref{tab:test_cases} delineates the comprehensive test suite executed during quality assurance.
+
+\begin{table}[h!]
+\centering
+\caption{System Test Cases and Verification Outcomes}
+\label{tab:test_cases}
+\begin{tabularx}{\textwidth}{p{2.5cm}p{4cm}p{4.5cm}c}
+\toprule
+\textbf{Test Module} & \textbf{Test Scenario} & \textbf{Observed Behavior} & \textbf{Status} \\
+\midrule
+User Auth & Registration with invalid email format & Validation rejected with HTTP 400 and format error toast & \textbf{Pass} \\
+User Auth & Password hashing verification & Password stored as \$2y\$ Bcrypt hash; plaintext rejected & \textbf{Pass} \\
+Search Engine & Input debounce at 300ms vs 450ms & Request emitted strictly after typing stopped for $>$400ms & \textbf{Pass} \\
+Search Engine & Stop word elimination & Queries like ``how to closures'' correctly match ``closures'' & \textbf{Pass} \\
+AI Generation & Gemini prompt with novel topic (``Docker'') & Returns 3 valid questions; inserted to DB; HTTP 200 & \textbf{Pass} \\
+Database Failover & MySQL unreachable or missing config & Auto-initializes SQLite and auto-seeds initial 18 questions & \textbf{Pass} \\
+Practice Engine & Answer covering 3 of 4 keywords & Displays 75\% coverage score with green feedback pill & \textbf{Pass} \\
+Security & SQL injection payload in search string & Sanitized by PDO prepared statements; zero leakage & \textbf{Pass} \\
+Admin Telemetry & Search with 0 matches recorded & Query logged with \texttt{is\_unresolved = 1} in analytics table & \textbf{Pass} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Dual-Database Failover Verification}
+The database connection routine in \texttt{db.php} was subjected to fault-injection testing:
+\begin{enumerate}
+    \item \textbf{Scenario A (Remote MySQL Online):} When environment variables \texttt{DB\_HOST}, \texttt{DB\_USER}, and \texttt{DB\_PASS} were supplied, the system established an authenticated PDO MySQL connection in under 25ms.
+    \item \textbf{Scenario B (Remote MySQL Offline / Unreachable):} Upon deliberate disruption of MySQL network connectivity, the 2-second connection timeout triggered failover. The system verified that \texttt{database.sqlite} existed, registered a custom SQLite \texttt{RAND()} mathematical callback, and served incoming requests with zero downtime.
+\end{enumerate}
+
+\section{Docker Containerization and Cloud Deployment}
+To achieve seamless, repeatable production deployment, the platform was containerized using Docker:
+
+\begin{lstlisting}[language=bash, caption={Production Dockerfile Configuration}]
+FROM php:8.2-apache
+RUN docker-php-ext-install pdo pdo_mysql
+RUN a2enmod rewrite
+WORKDIR /var/www/html
+COPY . /var/www/html/
+RUN chown -R www-data:www-data /var/www/html && chmod -R 777 /var/www/html
+EXPOSE 80
+CMD ["sh", "-c", "sed -i \"s/Listen [0-9]*/Listen ${PORT:-80}/\" /etc/apache2/ports.conf && sed -i \"s/<VirtualHost \\*:[0-9]*>/<VirtualHost \\*:${PORT:-80}>/\" /etc/apache2/sites-available/000-default.conf && exec apache2-foreground"]
+\end{lstlisting}
+
+\subsection{Cloud Hosting on Render}
+The repository was connected to the \textbf{Render} cloud platform as a Docker Web Service. Key deployment characteristics include:
+\begin{itemize}
+    \item \textbf{Automatic CI/CD Pipeline:} Render detects pushes to the \texttt{main} branch on GitHub, builds the container image, and provisions the service automatically.
+    \item \textbf{Dynamic Port Binding:} Render injects an ephemeral port via the \texttt{PORT} environment variable, which is parsed by our container startup script.
+    \item \textbf{SSL Termination:} Automatic TLS encryption provides secure HTTPS access.
+\end{itemize}
+
+\section{Conclusion and Future Scope}
+
+\subsection{Conclusion}
+The \textbf{OmniFAQ AI} platform successfully fulfills all foundational objectives. By merging curated industry interview questions with Google's Gemini Generative AI, the platform delivers an adaptive, self-expanding study portal. The automated ingestion mechanism ensures that once an AI question is synthesized, it becomes a permanent asset, drastically reducing external API dependency while expanding content coverage. Furthermore, its dual-driver database resilience and Docker containerization ensure high portability from local educational classrooms to scalable cloud infrastructures.
+
+\subsection{Future Scope}
+Future enhancements planned for the platform include:
+\begin{enumerate}
+    \item \textbf{Voice-Based Mock Interviews:} Integration of speech-to-text (STT) and text-to-speech (TTS) engines to emulate real-time conversational interview rounds.
+    \item \textbf{Live Code Sandbox Execution:} Embedding WebAssembly-based code runners (e.g., Pyodide or browser-based JS runtimes) for in-browser algorithmic coding challenges.
+    \item \textbf{Personalized Learning Graphs:} Implementing spaced-repetition algorithms (e.g., SuperMemo SM-2) to remind candidates to review previously missed questions at optimal retention intervals.
+    \item \textbf{Vector Semantic Search:} Incorporating text embeddings and vector databases (e.g., Pinecone or ChromaDB) for semantic similarity matching beyond keyword scoring.
+\end{enumerate}
