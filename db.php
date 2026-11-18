@@ -19,6 +19,24 @@ if (isset($_SERVER['HTTP_HOST'])) {
     $isLocal = true;
 }
 
+// Load local .env file if present
+if (file_exists(__DIR__ . '/.env')) {
+    $lines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (empty($line) || strpos($line, '#') === 0) continue;
+        if (strpos($line, '=') !== false) {
+            list($name, $value) = explode('=', $line, 2);
+            $name = trim($name);
+            $value = trim($value, " \t\n\r\0\x0B\"'");
+            if (getenv($name) === false) {
+                putenv("{$name}={$value}");
+                $_ENV[$name] = $value;
+            }
+        }
+    }
+}
+
 // Database Configuration - Supports Cloud Environment Variables or local fallback
 define('DB_HOST', getenv('DB_HOST') ?: ($isLocal ? '127.0.0.1' : ''));
 define('DB_NAME', getenv('DB_NAME') ?: 'ai_faq_db');
@@ -29,7 +47,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 // Google Gemini API Configuration
 define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: '');
-define('GEMINI_MODEL', getenv('GEMINI_MODEL') ?: 'gemini-1.5-flash');
+define('GEMINI_MODEL', getenv('GEMINI_MODEL') ?: 'gemini-2.5-flash');
 
 /**
  * Returns a singleton PDO database connection instance.

@@ -505,7 +505,7 @@ function handleGenerateAiQuestions(PDO $pdo, array $input) {
               'Do not return any markdown formatting outside of JSON. Return ONLY the raw JSON array. ' .
               'Example format: [{"question":"Q?","answer":"A.","category":"Cat","difficulty":"Medium","tags":"t1,t2"}]';
 
-    $model = defined('GEMINI_MODEL') ? GEMINI_MODEL : 'gemini-1.5-flash';
+    $model = defined('GEMINI_MODEL') ? GEMINI_MODEL : 'gemini-2.5-flash';
     $url = 'https://generativelanguage.googleapis.com/v1beta/models/' . $model . ':generateContent?key=' . GEMINI_API_KEY;
 
     $postData = [
